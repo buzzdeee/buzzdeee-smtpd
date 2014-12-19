@@ -40,6 +40,8 @@ class smtpd (
   $relay_via  = $smtpd::params::relay_via,
   $aliases    = $smtpd::params::aliases,
   $aliases_db = $smtpd::params::aliases_db,
+  $service_ensure = $smtpd::params::service_ensure,
+  $service_enable = $smtpd::params::service_enable,
 ) inherits smtpd::params {
 
   class { 'smtpd::config':
@@ -48,4 +50,13 @@ class smtpd (
     aliases    => $aliases,
     aliases_db => $aliases_db,
   }
+
+  class { 'smtpd::service':
+    service_ensure => $service_ensure,
+    service_enable => $service_enable,
+  }
+
+  Class['smtpd::config'] ~>
+  Class['smtpd::service']
+
 }
